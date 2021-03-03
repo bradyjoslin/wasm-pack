@@ -83,8 +83,8 @@ Either way, the contents of `utils.rs` define a single public function `set_pani
 
 ```rust
     // When the `wee_alloc` feature is enabled, use `wee_alloc` as the global
-    // When the `wee_alloc` feature is enabled, use `wee_alloc` as the global	// allocator.
-    // allocator.	#[cfg(feature = "wee_alloc")]
+    // allocator.	
+    #[cfg(feature = "wee_alloc")]
     if #[cfg(feature = "wee_alloc")] {	#[global_allocator]
         #[global_allocator]	static ALLOC: wee_alloc::WeeAlloc = wee_alloc::WeeAlloc::INIT;
 ```
