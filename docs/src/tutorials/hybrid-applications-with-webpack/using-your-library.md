@@ -22,9 +22,8 @@ A new project folder will be created with the name you supply.
 If we look in the project, we'll see the following:
 
 - `.gitignore`: ignores `node_modules`
-- `LICENSE-APACHE` and `LICENSE-MIT`: most Rust projects are licensed this way, so these are included for you
-- `README.md`: the file you are reading now!
-- `index.html`: a bare bones html document that includes the webpack bundle
+- `README.md`: basic information about running and building
+- `static/index.html`: a bare bones html document that includes the webpack bundle
 - `js/index.js`: example JS file with a comment showing how to import and use a wasm pkg
 - `package.json` and `package-lock.json`:
   - pulls in devDependencies for using webpack:
@@ -33,7 +32,7 @@ If we look in the project, we'll see the following:
       - [`webpack-dev-server`](https://www.npmjs.com/package/webpack-dev-server)
   - defines a `start` script to run `webpack-dev-server`
 - `webpack.config.js`: configuration file for bundling your JS with webpack
-- `crate/src/lib.rs`: your Rust crate code!
+- `src/lib.rs`: your Rust crate code!
 
 ## Your Rust Crate
 
@@ -41,15 +40,17 @@ The scaffolded project includes an example Rust WebAssembly webpack crate.
 
 Inside the `crate/src/lib.rs` file we see a `run` function that's callable from our JS file:
 ```rust
-// Called by our JS entry point to run the example.
-#[wasm_bindgen]
-pub fn run() -> Result<(), JsValue> {
-    set_panic_hook();
+// This is like the `main` function, except for JavaScript.
+#[wasm_bindgen(start)]
+pub fn main_js() -> Result<(), JsValue> {
+    // This provides better error messages in debug mode.
+    // It's disabled in release mode so it doesn't bloat up the file size.
+    #[cfg(debug_assertions)]
+    console_error_panic_hook::set_once();
 
-    // ...
-    let p: web_sys::Node = document.create_element("p")?.into();
-    p.set_text_content(Some("Hello from Rust, WebAssembly, and Webpack!"));
-    // ...
+
+    // Your code goes here!
+    console::log_1(&JsValue::from_str("Hello world!"));
 
     Ok(())
 }
@@ -59,9 +60,7 @@ Now, open up the `js/index.js` file. We see our Rust-generated wasm `run` functi
 called inside our JS file.
 
 ```js
-import("../crate/pkg").then(module => {
-  module.run();
-});
+import("../pkg/index.js").catch(console.error);
 ```
 
 ## Run The Project
@@ -79,7 +78,6 @@ In the root directory, we'll run:
 npm start
 ```
 
-Then in a web browser navigate to `http://localhost:8080` and you should be greeted
-with text in the body of the page that says "Hello from Rust, WebAssembly, and Webpack!"
+Then in a web browser navigate to `http://localhost:8080` and you should "Hello world!" in the developer console.
 
 If you did congrats! You've successfully used the rust-webpack template!
