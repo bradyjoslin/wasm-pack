@@ -262,18 +262,18 @@ pub fn cargo_install(
 
     if version == "latest" {
         cmd.arg("install")
-        .arg("--force")
-        .arg(crate_name)
-        .arg("--root")
-        .arg(&tmp);
+            .arg("--force")
+            .arg(crate_name)
+            .arg("--root")
+            .arg(&tmp);
     } else {
         cmd.arg("install")
-        .arg("--force")
-        .arg(crate_name)
-        .arg("--version")
-        .arg(version)
-        .arg("--root")
-        .arg(&tmp);
+            .arg("--force")
+            .arg(crate_name)
+            .arg("--version")
+            .arg(version)
+            .arg("--root")
+            .arg(&tmp);
     }
 
     let context = format!("Installing {} with cargo", tool);
